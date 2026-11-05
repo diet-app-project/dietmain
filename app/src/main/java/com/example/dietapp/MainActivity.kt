@@ -6,11 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.dietapp.ui.navigation.NavGraph
+import com.example.dietapp.ui.navigation.Screen
 import com.example.dietapp.ui.theme.DietAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +27,46 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DietAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainAppScreen()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MainAppScreen() {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DietAppTheme {
-        Greeting("Android")
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            NavigationBar {
+                Screen.bottomNavItems.forEach { screen ->
+                    NavigationBarItem(
+                        selected = currentRoute == screen.route,
+                        onClick = {
+                            if (currentRoute != screen.route) {
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        icon = { Icon(imageVector = screen.icon, contentDescription = screen.title) },
+                        label = { Text(text = screen.title) }
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        NavGraph(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }

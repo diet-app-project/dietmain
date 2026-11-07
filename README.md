@@ -2,7 +2,7 @@
 
 먹은 음식을 사진·섭취량(g)과 함께 기록하고, **식약처 공공 DB** 기준으로 하루·한 주·최근 30일의 열량과 탄수화물·단백질·지방 균형을 보여주는 Android 앱입니다.
 
-- **시연 영상**: [YouTube 링크](https://youtu.be/여기에_링크) — 모든 기능 + 단위·UI 테스트 실행 결과 포함
+- **시연 영상**: [YouTube 링크](https://www.youtube.com/watch?v=jpzAB4mbThw) — 모든 기능 + 단위·UI 테스트 실행 결과 포함
 - **저장소**: https://github.com/diet-app-project/dietmain
 
 <!-- 스크린샷: docs/screenshots/ 에 넣고 아래 경로를 맞춰주세요 -->

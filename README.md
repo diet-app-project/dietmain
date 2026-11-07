@@ -5,11 +5,6 @@
 - **시연 영상**: [YouTube 링크](https://www.youtube.com/watch?v=jpzAB4mbThw) — 모든 기능 + 단위·UI 테스트 실행 결과 포함
 - **저장소**: https://github.com/diet-app-project/dietmain
 
-<!-- 스크린샷: docs/screenshots/ 에 넣고 아래 경로를 맞춰주세요 -->
-| 식단 기록 | 식사 입력 | 식사 상세 | 섭취 통계 |
-|:---:|:---:|:---:|:---:|
-| <img src="docs/screenshots/record.png" width="180"> | <img src="docs/screenshots/input.png" width="180"> | <img src="docs/screenshots/detail.png" width="180"> | <img src="docs/screenshots/statistics.png" width="180"> |
-
 ---
 
 ## 1. 앱 소개

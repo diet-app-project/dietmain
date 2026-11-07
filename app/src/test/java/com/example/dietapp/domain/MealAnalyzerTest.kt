@@ -6,7 +6,6 @@ import com.example.dietapp.data.model.Meal
 import com.example.dietapp.data.model.MealItemWithFood
 import com.example.dietapp.data.model.MealType
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
@@ -77,25 +76,20 @@ class MealAnalyzerTest {
         assertEquals(200.0, kcalByDate[date2] ?: 0.0, 0.001)
     }
 
-    // 10. 최근 30일 필터 경계값 (30일 전 포함, 31일 전 제외)
+    // 10. 최근 30개 날짜의 양쪽 경계와 다음 날 제외
     @Test
     fun test10_filterLast30Days_boundaryValues() {
-        val now = LocalDateTime.of(2026, 11, 5, 12, 0, 0)
+        val now = LocalDateTime.of(2026, 11, 5, 12, 0)
+        val meals = listOf(
+            DetailedMeal(Meal(id = 1, dateTime = LocalDateTime.of(2026, 10, 6, 23, 59, 59))),
+            DetailedMeal(Meal(id = 2, dateTime = LocalDateTime.of(2026, 10, 7, 0, 0))),
+            DetailedMeal(Meal(id = 3, dateTime = LocalDateTime.of(2026, 11, 5, 23, 59, 59))),
+            DetailedMeal(Meal(id = 4, dateTime = LocalDateTime.of(2026, 11, 6, 0, 0))),
+        )
 
-        val thirtyDaysAgoStart = LocalDateTime.of(2026, 10, 6, 0, 0, 0) // 30일 전 시작
-        val thirtyOneDaysAgo = LocalDateTime.of(2026, 10, 5, 23, 59, 59) // 31일 전
-        val today = LocalDateTime.of(2026, 11, 5, 10, 0, 0)
+        val filtered = analyzer.filterLastOneMonth(meals, now)
 
-        val meal31DaysAgo = DetailedMeal(Meal(id = 1, dateTime = thirtyOneDaysAgo, mealType = MealType.BREAKFAST))
-        val meal30DaysAgo = DetailedMeal(Meal(id = 2, dateTime = thirtyDaysAgoStart, mealType = MealType.BREAKFAST))
-        val mealToday = DetailedMeal(Meal(id = 3, dateTime = today, mealType = MealType.LUNCH))
-
-        val filtered = analyzer.filterLastOneMonth(listOf(meal31DaysAgo, meal30DaysAgo, mealToday), now)
-
-        assertEquals(2, filtered.size)
-        assertTrue(filtered.any { it.meal.id == 2L })
-        assertTrue(filtered.any { it.meal.id == 3L })
-        assertTrue(filtered.none { it.meal.id == 1L })
+        assertEquals(listOf(2L, 3L), filtered.map { it.meal.id })
     }
 
     // 11. 끼니 종류별 영양소 집계
@@ -112,10 +106,10 @@ class MealAnalyzerTest {
 
         val result = analyzer.analyzeNutrientsByMealType(listOf(breakfast, lunch))
 
-        assertEquals(100.0, result[MealType.BREAKFAST]?.kcal ?: 0.0, 0.001)
-        assertEquals(200.0, result[MealType.LUNCH]?.kcal ?: 0.0, 0.001)
-        assertEquals(0.0, result[MealType.DINNER]?.kcal ?: 0.0, 0.001)
-        assertEquals(0.0, result[MealType.SNACK]?.kcal ?: 0.0, 0.001)
+        assertEquals(CalculatedNutrients(100.0, 20.0, 3.0, 1.0), result.getValue(MealType.BREAKFAST))
+        assertEquals(CalculatedNutrients(200.0, 10.0, 15.0, 5.0), result.getValue(MealType.LUNCH))
+        assertEquals(CalculatedNutrients.ZERO, result.getValue(MealType.DINNER))
+        assertEquals(CalculatedNutrients.ZERO, result.getValue(MealType.SNACK))
     }
 
     // 12. 기록이 없을 때 빈 결과 처리

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.dietapp.data.repository.MealRepository
 import com.example.dietapp.domain.MealAnalyzer
+import com.example.dietapp.domain.MealTimeZone
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +25,7 @@ class MealAnalysisViewModel(
         loadAnalysis()
     }
 
-    fun loadAnalysis(now: LocalDateTime = LocalDateTime.now()) {
+    fun loadAnalysis(now: LocalDateTime = LocalDateTime.now(MealTimeZone)) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             mealRepository.getAllMealsWithItems().collect { allMeals ->

@@ -1,11 +1,63 @@
 package com.example.dietapp.ui.theme
 
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+internal val BoriLightColors = lightColorScheme(
+    primary = Color(0xFF8D2440),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFF6D3DD),
+    onPrimaryContainer = Color(0xFF4E1428),
+    secondary = Color(0xFF854A5B),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFF8DCE5),
+    onSecondaryContainer = Color(0xFF4B2130),
+    tertiary = Color(0xFF66517E),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFEDE2F8),
+    onTertiaryContainer = Color(0xFF402D54),
+    background = Color(0xFFFFF4EB),
+    onBackground = Color(0xFF371D26),
+    surface = Color(0xFFFFFBF6),
+    onSurface = Color(0xFF371D26),
+    surfaceVariant = Color(0xFFF6E8E0),
+    onSurfaceVariant = Color(0xFF684B54),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFFFF8F1),
+    surfaceContainer = Color(0xFFFFEFE6),
+    surfaceContainerHigh = Color(0xFFF8E5DD),
+    surfaceContainerHighest = Color(0xFFF1DCD5),
+    outline = Color(0xFF8C6873),
+    outlineVariant = Color(0xFFE8D2CC),
+    surfaceTint = Color(0xFF8D2440),
+)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+internal val BoriDarkColors = darkColorScheme(
+    primary = Color(0xFFFFB2C5),
+    onPrimary = Color(0xFF551329),
+    primaryContainer = Color(0xFF74253D),
+    onPrimaryContainer = Color(0xFFFFDCE5),
+    secondary = Color(0xFFF1B4C7),
+    onSecondary = Color(0xFF4A2433),
+    secondaryContainer = Color(0xFF593040),
+    onSecondaryContainer = Color(0xFFFFDAE6),
+    tertiary = Color(0xFFDEC3F4),
+    onTertiary = Color(0xFF3C294F),
+    tertiaryContainer = Color(0xFF4B385D),
+    onTertiaryContainer = Color(0xFFF2DFFF),
+    background = Color(0xFF22151A),
+    onBackground = Color(0xFFFBE5E5),
+    surface = Color(0xFF2C1D23),
+    onSurface = Color(0xFFFBE5E5),
+    surfaceVariant = Color(0xFF422D36),
+    onSurfaceVariant = Color(0xFFE2C4CD),
+    surfaceContainerLowest = Color(0xFF1C1015),
+    surfaceContainerLow = Color(0xFF281A20),
+    surfaceContainer = Color(0xFF35242C),
+    surfaceContainerHigh = Color(0xFF3E2B34),
+    surfaceContainerHighest = Color(0xFF49333E),
+    outline = Color(0xFFAB8794),
+    outlineVariant = Color(0xFF604852),
+    surfaceTint = Color(0xFFFFB2C5),
+)

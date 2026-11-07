@@ -17,17 +17,15 @@ class MealAnalyzer(
 ) {
 
     /**
-     * 기준일(now)로부터 최근 1달(30일 전 00:00:00 ~ now) 이내의 식사 목록만 필터링합니다.
-     * 30일 전 포함, 31일 전 제외.
+     * 서울 기준일을 포함한 최근 30개 달력 날짜의 식사만 선택합니다.
+     * Room에 저장된 dateTime과 전달받은 now는 서울 현지 시각입니다.
      */
     fun filterLastOneMonth(
         meals: List<DetailedMeal>,
-        now: LocalDateTime = LocalDateTime.now()
+        now: LocalDateTime = LocalDateTime.now(MealTimeZone)
     ): List<DetailedMeal> {
-        val thirtyDaysAgoStart = now.minusDays(30).toLocalDate().atStartOfDay()
-        return meals.filter { meal ->
-            !meal.meal.dateTime.isBefore(thirtyDaysAgoStart) && !meal.meal.dateTime.isAfter(now)
-        }
+        val range = MealPeriod.LAST_30_DAYS.endingOn(now.toLocalDate())
+        return meals.filter { it.meal.dateTime.toLocalDate() in range }
     }
 
     /**
@@ -75,7 +73,7 @@ class MealAnalyzer(
      */
     fun analyzeLastOneMonth(
         meals: List<DetailedMeal>,
-        now: LocalDateTime = LocalDateTime.now()
+        now: LocalDateTime = LocalDateTime.now(MealTimeZone)
     ): MonthAnalysisResult {
         val lastMonthMeals = filterLastOneMonth(meals, now)
         val totalCalories = calculateTotalCalories(lastMonthMeals)

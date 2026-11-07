@@ -2,8 +2,11 @@ package com.example.dietapp.domain
 
 import com.example.dietapp.data.model.Food
 import com.example.dietapp.data.model.MealItemWithFood
-import kotlin.math.pow
-import kotlin.math.round
+import java.math.BigDecimal
+import java.math.RoundingMode
+
+internal fun roundNutritionValue(value: Double, decimals: Int): BigDecimal =
+    BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP)
 
 data class CalculatedNutrients(
     val kcal: Double,
@@ -21,12 +24,14 @@ data class CalculatedNutrients(
     }
 
     fun roundTo(decimals: Int = 1): CalculatedNutrients {
-        val factor = 10.0.pow(decimals)
+        fun rounded(value: Double): Double =
+            if (value.isFinite()) roundNutritionValue(value, decimals).toDouble() else value
+
         return CalculatedNutrients(
-            kcal = round(kcal * factor) / factor,
-            carb = round(carb * factor) / factor,
-            protein = round(protein * factor) / factor,
-            fat = round(fat * factor) / factor,
+            kcal = rounded(kcal),
+            carb = rounded(carb),
+            protein = rounded(protein),
+            fat = rounded(fat),
         )
     }
 

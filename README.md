@@ -72,7 +72,7 @@ app/src/main/java/com/example/dietapp/
 | **로컬 단위 테스트** | **28개** (5개 클래스) | 100g 기준값 일치, 250g = 2.5배, 0g, 음수 거부, 여러 음식 합계, 반올림, 30일 경계(포함/제외), 끼니별 집계, 빈 기록, 서울 시간대 날짜 경계, g 입력 검증 |
 | **Compose UI 테스트** | **4개** (2개 클래스) | 섭취량 100→180g 변경 시 음식별 120→216kcal·한 끼 160→256kcal 갱신 / 기록 행 클릭 시 해당 식사 상세 표시 |
 
-- 단위 테스트: `NutritionCalculatorTest`(6) · `MealAnalyzerTest`(6) · `MealHistorySummaryTest`(7) · `MealInputFoodValidationTest`(6) · `IntakeValueFormatTest`(3)
+- 단위 테스트 28개 = **구현진 12개** (`NutritionCalculatorTest` 6 · `MealAnalyzerTest` 6: 영양 계산·30일 분석) + **이우석 16개** (`MealHistorySummaryTest` 7 · `MealInputFoodValidationTest` 6 · `IntakeValueFormatTest` 3: 날짜별 요약·g 입력 검증·표시 형식, 최종 테스트 단계에서 추가)
 - UI 테스트: `MealEntryScreenTest`(2) · `MealListScreenTest`(2) — 테스트마다 인메모리 Room 사용
 - 실행 결과: Pixel 8(Android 17)에서 계측 테스트 **5/5 통과** (예제 테스트 포함)
 
@@ -95,18 +95,18 @@ app/src/main/java/com/example/dietapp/
 | 담당 | 이름 | 맡은 부분 |
 |---|---|---|
 | **A** | 구현진 | 프로젝트 기획·패키지 구조, 음식 100종 데이터 선정(`foods.json`), 데이터 모델, 영양 계산·분석 로직(`domain`), Room DB·DAO·Repository, 핵심 로직 단위 테스트 12개, 초기 화면 프로토타입, AGP 9 빌드 오류 해결 |
-| **B** | 이우석 | 기록·입력·상세·통계 화면과 화면 이동, 사진 저장, 팀 코드 통합·Room 연결, Compose UI 테스트, 테마·캐릭터·아이콘 디자인 |
+| **B** | 이우석 | 기록·입력·상세·통계 화면과 화면 이동, 사진 저장, 팀 코드 통합·Room 연결, 화면 로직 단위 테스트 16개, Compose UI 테스트, 테마·캐릭터·아이콘 디자인 |
 
 ---
 
 ## 5. 팀원별 Vibe Coding 사용 목록
 
-🅰 **A(구현진)** · 🅱 **B(이우석)** — ID 앞 글자가 프롬프트를 입력한 사람입니다.
+🅰 **A 구현진** · 🅱 **B 이우석** — ID 앞 글자가 프롬프트를 입력한 사람입니다.
 
 | 작성자 | 사용 도구 | 전체 프롬프트 |
 |:---:|---|:---:|
-| 🅰 A | Claude · (A-01~A-10 사용 도구 기입) | 12건 |
-| 🅱 B | ChatGPT Work (Codex) · 이미지 생성 도구 · Inkscape | 39건 |
+| 🅰 A 구현진 | Claude (A-00 기획·데이터) · Gemini in Android Studio (A-01~A-10) | 12건 |
+| 🅱 B 이우석 | ChatGPT Work (Codex) · 이미지 생성 도구 · Inkscape | 39건 |
 
 ### 5-1. 작업 흐름
 
@@ -120,6 +120,7 @@ app/src/main/java/com/example/dietapp/
 | 🅱 B | 식사 입력 | B-012~018 | 날짜·시간·끼니, 사진, 음식 검색, g 입력, 영양 미리보기, 저장 |
 | 🅱 B | 섭취 통계 | B-019~022 | 일간·주간·30일 통계, 끼니별 그래프, 데이터 출처 |
 | 🅱 B | 통합·검증 | B-023~026 | A·B 코드 통합, 사진 저장, 실제 데이터 검증, UI 테스트 |
+| 🅱 B | 최종 테스트 | (프롬프트 없음) | 화면 로직 단위 테스트 16개 추가 — 최종 테스트 중 직접 작성 |
 | 🅱 B | 디자인 | B-028~039 | 화면 디자인, 캐릭터 '보리', 음식 아이콘 100종 |
 
 > A-06~09의 초기 화면은 통합 단계(B-023)에서 B의 최종 화면으로 교체했습니다 (**초기 버전 → 최종 버전**).
@@ -164,7 +165,7 @@ app/src/main/java/com/example/dietapp/
 <details><summary><b>🅰 A-04</b> · 핵심 로직 단위 테스트 12개</summary>
 
 ```text
-아래 사항들을 테스트하는 핵심 로직 단위 테스트(Unit Test) 작성 해
+위 내용을 참고해서 아래 사항들 코딩해줘 핵심 로직 단위 테스트(Unit Test) 작성 해
 1.100g 섭취 시 성분값이 DB 값과 같다  2.250g 섭취 시 2.5배가 된다  3.0g이면 모두 0이다
 4.음수 g 입력은 거부(예외)한다  5.여러 음식의 합계가 맞다  6.소수점 반올림 규칙이 맞다
 7.시간으로 끼니 자동 추천  8.날짜별 끼니 수 집계  9.날짜별 kcal 합계
